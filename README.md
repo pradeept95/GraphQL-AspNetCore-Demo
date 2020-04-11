@@ -37,3 +37,8 @@ GraphQL Demo
           {
             "id" : 2
           }
+          
+ # For More Query Type
+ 
+ for more quey type with param follow below link
+ https://volosoft.com/blog/Building-GraphQL-APIs-with-ASP.NET-Core
