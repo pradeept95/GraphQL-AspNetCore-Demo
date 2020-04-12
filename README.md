@@ -38,6 +38,35 @@ GraphQL Demo
             "id" : 2
           }
           
+  ## For PagedRequest
+  
+ ### Request Model
+              {
+              "query" : {
+                "searchText" : "",
+                "pageNumber" : 1,
+                "pageSize" : 10 
+              }
+            }
+            
+  ### Query  :
+         query Query($query : PagedRequestType!){
+              employeePaged(query: $query){
+                data{
+                  firstName
+                  lastName
+                  emailAddresses{
+                    email
+                  }
+                  addresses{
+                    addressLine1
+                  }
+                }
+                totalCount
+              }
+            }
+          
+  
  # For More Query Type
  
  for more quey type with param follow below link
