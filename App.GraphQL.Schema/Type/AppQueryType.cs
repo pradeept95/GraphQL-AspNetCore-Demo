@@ -25,9 +25,36 @@ namespace App.GraphQL.Type
              });
 
             //get employee by id
+            Field<PagedResponseType<Employee, EmployeeType>>(
+            name: "employeePaged",
+            arguments: new QueryArguments(new QueryArgument<PagedRequestType> { Name = "query" }),
+            resolve: context =>
+            {
+                var query = context.GetArgument<PagedRequest>("query");
+
+                var data = db.Employee
+                   .Include(x => x.Addresses)
+                   .Include(x => x.Phones)
+                   .Include(x => x.EmailAddresses)
+                   .AsQueryable();
+
+                if (!string.IsNullOrEmpty(query.SearchText))
+                {
+                    data = data.Where(x => x.FirstName.Contains(query.SearchText)).AsQueryable();
+                }
+
+                var skip = (query.PageNumber - 1) * query.PageSize;
+                return new PagedResponse<Employee>
+                {
+                    Data = data.Skip(skip).Take(query.PageSize).ToList(),
+                    TotalCount = data.Count()
+                };
+            });
+
+            //get employee by id
             Field<EmployeeType>(
             name: "employee",
-             arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "id" }),
+            arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "id" }),
             resolve: context =>
             {
 
